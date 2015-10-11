@@ -10,7 +10,7 @@
 
 <meta name="author" content="Nan Xiao &lt;nanx@uchicago.edu&gt;" />
 
-<meta name="date" content="2015-07-31" />
+<meta name="date" content="2015-10-11" />
 
 <title>Dockerize R Markdown Documents</title>
 
@@ -72,7 +72,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="header">
 <h1 class="title">Dockerize R Markdown Documents</h1>
 <h4 class="author"><em>Nan Xiao &lt;<a href="mailto:nanx@uchicago.edu">nanx@uchicago.edu</a>&gt;</em></h4>
-<h4 class="date"><em>2015-07-31</em></h4>
+<h4 class="date"><em>2015-10-11</em></h4>
 </div>
 
 <div id="TOC">
@@ -97,7 +97,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <pre><code>---
 title: &quot;The Missing Example of liftr&quot;
 author: &quot;Author Name&quot;
-date: &quot;2015-07-31&quot;
+date: &quot;2015-10-11&quot;
 output:
   html_document:
     highlight: haddock
@@ -139,9 +139,9 @@ liftr:
 <ul>
 <li><code>from</code> - <a href="https://docs.docker.com/reference/builder/#from">Base image</a> for building the docker image. Default is <code>&quot;rocker/r-base:latest&quot;</code>.</li>
 <li><code>latex</code> - Is TeX environment needed when rendering the document? Default is <code>false</code>.</li>
-<li><code>pandoc</code> - Should we install pandoc in the container? Default is <code>true</code>. If pandoc was already installed in the base image, this should be set to <code>false</code> to avoid potential errors. For example, for <a href="https://registry.hub.docker.com/u/rocker/rstudio/"><code>rocker/rstudio</code></a> and <a href="http://www.bioconductor.org/help/docker/"><code>bioconductor/...</code></a> images, this option will be automatically set to <code>false</code> since they already have pandoc installed.</li>
+<li><code>pandoc</code> - Should we install pandoc in the container? Default is <code>true</code>. If pandoc was already installed in the base image, this should be set to <code>false</code> to avoid potential errors. For example, for <a href="https://registry.hub.docker.com/u/rocker/rstudio/"><code>rocker/rstudio</code></a> and <a href="https://www.bioconductor.org/help/docker/"><code>bioconductor/...</code></a> images, this option will be automatically set to <code>false</code> since they already have pandoc installed.</li>
 <li><code>syslib</code> - Debian/Ubuntu system software packages depended in the document. Please also include software packages depended by the R packages included below, such as <code>gfortran</code> here required for compiling <code>randomForest</code>.</li>
-<li><code>cranpkg</code> - CRAN packages depended in the document.</li>
+<li><code>cranpkg</code> - CRAN packages depended in the document. If only <code>pkgname</code> is provided, <code>liftr</code> will install the <em>latest</em> version of the package on CRAN. To improve reproducibility, we recommend to use the package name with a specified version number: <code>pkgname/pkgversion</code> (e.g. <code>ggplot2/1.0.0</code>), even if the version is the current latest version. Note: <code>pkgversion</code> must be provided to install the archived versions of packages.</li>
 <li><code>biocpkg</code> - Bioconductor packages depended in the document.</li>
 <li><code>ghpkg</code> - GitHub R packages depended in the document. We accept the same format as the <code>repo</code> argument in <code>devtools::install_github</code>. Normally, <code>&quot;username/repo&quot;</code> would be sufficient.</li>
 </ul>
@@ -151,7 +151,7 @@ liftr:
 <p>The Rabix options are optional. Just make sure <code>rabix: true</code> when you need to enable Rabix support.</p>
 <ul>
 <li><code>rabix</code> - Logical. Should Rabix support be enabled for this document?</li>
-<li><code>rabix_json</code> - The URI (local file path or HTTP URL) to a JSON document that describes the Rabix app.</li>
+<li><code>rabix_json</code> - The URI (local file path or HTTP/HTTPS URL) to a JSON document that describes the Rabix app.</li>
 <li><code>rabix_d</code> - Working directory for the task. Required when <code>rabix: true</code>. We recommend to set this as the same directory (or a subdirectory) as the directory of the input R Markdown document, for better reproducibility and easier access of the output.</li>
 <li><code>rabix_args</code> - Additional arguments for Rabix and the Rabix app, usually the inputs and parameters. Run <code>rabix -h</code> or <a href="https://github.com/rabix/rabix/blob/master/README.md">read this page</a> for more details.</li>
 </ul>

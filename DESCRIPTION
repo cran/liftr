@@ -1,8 +1,8 @@
 Package: liftr
 Type: Package
 Title: Dockerize R Markdown Documents
-Version: 0.2
-Date: 2015-07-30
+Version: 0.3
+Date: 2015-10-10
 Authors@R: c(
     person("Miaozhu", "Li", email = "miaozhu.li@duke.edu", role = "ctb"),
     person("Tengfei", "Yin", email = "tengfei.yin@sbgenomics.com", role = "ctb"),
@@ -18,9 +18,9 @@ BugReports: https://github.com/road2stat/liftr/issues
 Depends: R (>= 3.0.2)
 Imports: yaml, knitr, rmarkdown, stringr
 NeedsCompilation: no
-Packaged: 2015-07-31 16:18:41 UTC; jimmy
+Packaged: 2015-10-11 09:45:19 UTC; jimmy
 Author: Miaozhu Li [ctb],
   Tengfei Yin [ctb],
   Nan Xiao [aut, cre]
 Repository: CRAN
-Date/Publication: 2015-07-31 18:40:24
+Date/Publication: 2015-10-11 16:08:58
