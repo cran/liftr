@@ -1,30 +1,33 @@
 FROM `r liftr_from`
 
-MAINTAINER `r liftr_maintainer` <`r liftr_maintainer_email`>
+MAINTAINER `r liftr_maintainer` <`r liftr_email`>
 
 # System dependencies for required R packages
 RUN  rm -f /var/lib/dpkg/available \
   && rm -rf  /var/cache/apt/* \
   && apt-get update -qq \
-  && apt-get install -t unstable -y --no-install-recommends \
+  && apt-get install -y --no-install-recommends \
     ca-certificates \
     libssl-dev \
     libcurl4-openssl-dev \
     libxml2-dev \
-    libssh2-1-dev \
     git
 
-`r liftr_syslib`
+`r liftr_sysdeps`
 
 `r liftr_texlive`
 
 `r liftr_pandoc`
 
-RUN Rscript -e "install.packages(c(`r liftr_factorypkg`), repos = 'https://cran.rstudio.com')"
+RUN Rscript -e "install.packages(c(`r liftr_factory`), repos = 'https://cran.rstudio.com')"
 
-`r liftr_cranpkg`
-`r liftr_biocpkg`
-`r liftr_ghpkg`
+`r liftr_cran`
+
+`r liftr_bioc`
+
+`r liftr_remotes`
+
+`r liftr_include`
 
 RUN mkdir /liftrroot/
 WORKDIR /liftrroot/

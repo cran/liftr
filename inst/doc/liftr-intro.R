@@ -1,24 +1,17 @@
 ## ---- eval = FALSE-------------------------------------------------------
-#  dir_docker = "~/liftr_docker/"
-#  dir.create(dir_docker)
-#  file.copy(system.file("docker.Rmd", package = "liftr"), dir_docker)
+#  dir_example = "~/liftr-minimal/"
+#  dir.create(dir_example)
+#  file.copy(system.file("examples/liftr-minimal.Rmd", package = "liftr"), dir_example)
 
 ## ---- eval = FALSE-------------------------------------------------------
 #  library("liftr")
-#  docker_input = paste0(dir_docker, "docker.Rmd")
-#  lift(docker_input)
+#  
+#  input = paste0(dir_example, "liftr-minimal.Rmd")
+#  lift(input)
 
 ## ---- eval = FALSE-------------------------------------------------------
-#  drender(docker_input)
+#  render_docker(input)
 
 ## ---- eval = FALSE-------------------------------------------------------
-#  dir_rabix  = "~/liftr_rabix/"
-#  dir.create(dir_rabix)
-#  file.copy(system.file("rabix.Rmd", package = "liftr"), dir_rabix)
-
-## ---- eval = FALSE-------------------------------------------------------
-#  library("liftr")
-#  rabix_input = paste0(dir_rabix, "rabix.Rmd")
-#  lift(rabix_input)
-#  drender(rabix_input)
+#  purge_image(paste0(dir_example, "liftr-minimal.docker.yml"))
 

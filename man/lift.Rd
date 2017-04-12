@@ -2,7 +2,7 @@
 % Please edit documentation in R/lift.R
 \name{lift}
 \alias{lift}
-\title{Dockerize R Markdown Documents}
+\title{Containerize R Markdown Documents}
 \usage{
 lift(input = NULL, output_dir = NULL)
 }
@@ -13,38 +13,36 @@ lift(input = NULL, output_dir = NULL)
 If not provided, will be the same directory as \code{input}.}
 }
 \value{
-\code{Dockerfile} (and \code{Rabixfile} if possible).
+\code{Dockerfile}.
 }
 \description{
-Generate \code{Dockerfile} for R Markdown documents.
-Rabix is supported if there is certain metadata in the R Markdown
-document: the function will generate a \code{Rabixfile} containing
-the parsed running parameters under the output directory.
+Containerize R Markdown documents. This function generates
+\code{Dockerfile} based on the liftr metadata in the RMD document.
 }
 \details{
-After running \link{lift}, run \link{drender} on the document to
+After running \link{lift}, run \link{render_docker} on the document to
 render the Dockerized R Markdown document using Docker containers.
 See \code{vignette('liftr-intro')} for details about the extended
 YAML front-matter metadata format used by liftr.
 }
 \examples{
-# 1. Dockerized R Markdown document
-dir_docker = paste0(tempdir(), '/lift_docker/')
-dir.create(dir_docker)
-file.copy(system.file("docker.Rmd", package = "liftr"), dir_docker)
-# use lift() to parse Rmd and generate Dockerfile
-lift(paste0(dir_docker, "docker.Rmd"))
-# view generated Dockerfile
-readLines(paste0(dir_docker, "Dockerfile"))
+# copy example file
+dir_example = paste0(tempdir(), '/liftr-minimal/')
+dir.create(dir_example)
+file.copy(system.file("examples/liftr-minimal.Rmd", package = "liftr"), dir_example)
 
-# 2. Dockerized R Markdown document with Rabix options
-dir_rabix = paste0(tempdir(), '/lift_rabix/')
-dir.create(dir_rabix)
-file.copy(system.file("rabix.Rmd", package = "liftr"), dir_rabix)
-lift(input = paste0(dir_rabix, "rabix.Rmd"))
-# view generated Dockerfile
-readLines(paste0(dir_rabix, "Dockerfile"))
-# view generated Rabixfile
-readLines(paste0(dir_rabix, "Rabixfile"))
+# containerization
+input = paste0(dir_example, "liftr-minimal.Rmd")
+lift(input)
+
+\dontrun{
+# render the document with Docker
+render_docker(input)
+
+# view rendered document
+browseURL(paste0(dir_example, "liftr-minimal.html"))
+
+# purge the generated Docker image
+purge_image(paste0(dir_example, "liftr-minimal.docker.yml"))}
 }
 

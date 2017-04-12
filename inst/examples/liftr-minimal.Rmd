@@ -1,0 +1,43 @@
+---
+title: "A Minimal Example for liftr"
+author: "Nan Xiao <<me@nanx.me>>"
+date: "`r Sys.Date()`"
+output:
+  tufte::tufte_html: default
+liftr:
+  from: "rocker/r-base:latest"
+  maintainer: "Nan Xiao"
+  email: "me@nanx.me"
+  cran:
+    - tufte
+    - kernlab
+---
+
+## A spectral clustering example
+
+This is an R Markdown document that could be rendered under a Docker container using `liftr`. The document requires the `specc()` function in the `kernlab` package from CRAN to perform a simple spectral clustering:
+
+```{r specc, fig.cap = 'Spectral clustering of spirals data.'}
+library("kernlab")
+data(spirals)
+set.seed(42)
+sc = specc(spirals, centers = 2)
+print(sc)
+plot(spirals, col = sc)
+```
+
+## Options of liftr in this document
+
+The document front-matter metadata includes the options for `liftr`, which is used for dockerizing the document:
+
+```{r liftrmeta}
+rmarkdown::metadata$liftr
+```
+
+## Session information
+
+The R session information for compiling this document is shown below.
+
+```{r session}
+sessionInfo()
+```
