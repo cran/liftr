@@ -1,389 +1,206 @@
 <!DOCTYPE html>
-<html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Introduction</title>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
-  }
-};
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Styles for R syntax highlighter -->
+<meta name="author" content="Nan Xiao &lt;https://nanx.me&gt;" />
+
+<meta name="date" content="2017-07-23" />
+
+<title>A Quick Introduction to liftr</title>
+
+<link href="data:text/css; charset=utf-8,%40font%2Dface%20%7B%0A%20%20font%2Dfamily%3A%20%27Lato%27%3B%0A%20%20font%2Dstyle%3A%20normal%3B%0A%20%20font%2Dweight%3A%20400%3B%0A%20%20src%3A%20local%28%27Lato%20Regular%27%29%2C%20local%28%27Lato%2DRegular%27%29%2C%20url%28https%3A%2F%2Ffonts%2Egstatic%2Ecom%2Fs%2Flato%2Fv13%2Fv0SdcGFAl2aezM9Vq%5FaFTQ%2Ettf%29%20format%28%27truetype%27%29%3B%0A%7D%0A%40font%2Dface%20%7B%0A%20%20font%2Dfamily%3A%20%27Lato%27%3B%0A%20%20font%2Dstyle%3A%20normal%3B%0A%20%20font%2Dweight%3A%20700%3B%0A%20%20src%3A%20local%28%27Lato%20Bold%27%29%2C%20local%28%27Lato%2DBold%27%29%2C%20url%28https%3A%2F%2Ffonts%2Egstatic%2Ecom%2Fs%2Flato%2Fv13%2FDvlFBScY1r%2DFMtZSYIYoYw%2Ettf%29%20format%28%27truetype%27%29%3B%0A%7D%0A" rel="stylesheet" type="text/css">
+
+
+<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: #990073
-   }
-
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
-</style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
-</script>
-
-
-
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
-}
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
-}
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
-
-h1 {
-   font-size:2.2em;
-}
-
-h2 {
-   font-size:1.8em;
-}
-
-h3 {
-   font-size:1.4em;
-}
-
-h4 {
-   font-size:1.0em;
-}
-
-h5 {
-   font-size:0.9em;
-}
-
-h6 {
-   font-size:0.8em;
-}
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
-}
-
-pre, img {
-  max-width: 100%;
-}
-pre {
-  overflow-x: auto;
-}
-pre code {
-   display: block; padding: 0.5em;
-}
-
-code {
-  font-size: 92%;
-  border: 1px solid #ccc;
-}
-
-code[class] {
-  background-color: #F8F8F8;
-}
-
-table, td, th {
-  border: none;
-}
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
-}
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
-}
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
-}
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20800px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20Lato%2C%20%22Palatino%20Linotype%22%2C%20%22Book%20Antiqua%22%2C%20Palatino%2C%20serif%3B%0Afont%2Dsize%3A%2016px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0Ah1%2Etitle%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Ah4%2Eauthor%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Ah4%2Edate%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%200px%3B%0Apadding%3A%2015px%3B%0Awidth%3A%20770px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2016px%3B%0Aline%2Dheight%3A%201%2E5%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2016px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2050px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2020px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%0Atable%20th%2C%0Atable%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%0Atable%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%0Acode%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%205px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%0A%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%205px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Menlo%2C%20Monaco%2C%20%22Lucida%20Console%22%2C%20Consolas%2C%20%22Courier%20New%22%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%3Ecode%2C%0Ali%3Ecode%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%2025px%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20110%25%3B%0Afont%2Dweight%3A%20normal%3B%0A%7D%0Aem%20%7B%0Afont%2Dstyle%3A%20normal%3B%0A%7D%0Aemph%20%7B%0Afont%2Dstyle%3A%20oblique%3B%0A%7D%0Ah5%2C%0Ah6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%23123d79%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%23007CC3%3B%0A%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23581858%3B%0A%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23007CC3%3B%0A%7D%0A%0Acode%3Espan%2Ekw%20%7B%0Acolor%3A%20%234271ae%3B%0A%7D%0A%0Acode%3Espan%2Edt%20%7B%0Acolor%3A%20%23c82829%3B%0A%7D%0A%0Acode%3Espan%2Edv%20%7B%0Acolor%3A%20%23f5871f%3B%0A%7D%0A%0Acode%3Espan%2Ebn%20%7B%0Acolor%3A%20%23718c00%3B%0A%7D%0A%0Acode%3Espan%2Efl%20%7B%0Acolor%3A%20%23718c00%3B%0A%7D%0A%0Acode%3Espan%2Ech%20%7B%0Acolor%3A%20%23718c00%3B%0A%7D%0A%0Acode%3Espan%2Est%20%7B%0Acolor%3A%20%23718c00%3B%0A%7D%0A%0Acode%3Espan%2Eco%20%7B%0Acolor%3A%20%238e908c%3B%0A%7D%0A%0Acode%3Espan%2Eot%20%7B%0Acolor%3A%20%234d4d4c%3B%0A%7D%0A%0Acode%3Espan%2Eal%20%7B%0Acolor%3A%20%23ff0000%3B%0A%7D%0A%0Acode%3Espan%2Efu%20%7B%0Acolor%3A%20%234271ae%3B%0A%7D%0A%0Acode%3Espan%2Eer%20%7B%0Acolor%3A%20%23a61717%3B%0A%7D%0A%0A%0Aimg%20%7B%0Adisplay%3A%20block%3B%0Amargin%3A%200%20auto%3B%0A%7D%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body>
-<h1>Introduction</h1>
 
-<p>In essence, liftr aims to solve the problem of <em>persistent reproducible reporting</em>.
-To achieve this goal, it extends the <a href="http://rmarkdown.rstudio.com">R Markdown</a>
-metadata format, and uses Docker to containerize and render R Markdown documents.</p>
 
-<h1>Metadata for containerization</h1>
 
-<p>To containerize your R Markdown document, the first step is adding <code>liftr</code>
-fields to the YAML metadata section of the document. For example:</p>
 
-<pre><code class="yaml">---
-title: &quot;The Missing Example of liftr&quot;
-author: &quot;Author Name&quot;
-date: &quot;2017-04-11&quot;
-output: rmarkdown::html_document
-liftr:
-  maintainer: &quot;Maintainer Name&quot;
-  email: &quot;name@example.com&quot;
-  from: &quot;rocker/r-base:latest&quot;
-  pandoc: true
-  texlive: false
-  sysdeps:
-    - gfortran
-  cran:
-    - glmnet
-  bioc:
-    - Gviz
-  remotes:
-    - &quot;road2stat/liftr&quot;
-  include: &quot;DockerfileSnippet&quot;
----
-</code></pre>
+<h1 class="title toc-ignore">A Quick Introduction to liftr</h1>
+<h4 class="author"><em>Nan Xiao &lt;<a href="https://nanx.me" class="uri">https://nanx.me</a>&gt;</em></h4>
+<h4 class="date"><em>2017-07-23</em></h4>
 
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#metadata-for-containerization"><span class="toc-section-number">2</span> Metadata for containerization</a><ul>
+<li><a href="#required-metadata"><span class="toc-section-number">2.1</span> Required metadata</a></li>
+<li><a href="#optional-metadata"><span class="toc-section-number">2.2</span> Optional metadata</a></li>
+</ul></li>
+<li><a href="#containerize-the-document"><span class="toc-section-number">3</span> Containerize the document</a></li>
+<li><a href="#render-the-document"><span class="toc-section-number">4</span> Render the document</a></li>
+<li><a href="#cleaning-up"><span class="toc-section-number">5</span> Cleaning up</a></li>
+<li><a href="#system-requirements"><span class="toc-section-number">6</span> System requirements</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>In essence, liftr aims to solve the problem of <em>persistent reproducible reporting</em>. To achieve this goal, it extends the <a href="http://rmarkdown.rstudio.com">R Markdown</a> metadata format, and uses Docker to containerize and render R Markdown documents.</p>
+</div>
+<div id="metadata-for-containerization" class="section level1">
+<h1><span class="header-section-number">2</span> Metadata for containerization</h1>
+<p>To containerize your R Markdown document, the first step is adding <code>liftr</code> fields to the YAML metadata section of the document. For example:</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="ot">---</span>
+<span class="fu">title:</span><span class="at"> </span><span class="st">&quot;The Missing Example of liftr&quot;</span>
+<span class="fu">author:</span><span class="at"> </span><span class="st">&quot;Author Name&quot;</span>
+<span class="fu">date:</span><span class="at"> </span><span class="st">&quot;2017-07-23&quot;</span>
+<span class="fu">output:</span><span class="at"> rmarkdown::html_document</span>
+<span class="fu">liftr:</span>
+  <span class="fu">maintainer:</span><span class="at"> </span><span class="st">&quot;Maintainer Name&quot;</span>
+  <span class="fu">email:</span><span class="at"> </span><span class="st">&quot;name@example.com&quot;</span>
+  <span class="fu">from:</span><span class="at"> </span><span class="st">&quot;rocker/r-base:latest&quot;</span>
+  <span class="fu">pandoc:</span><span class="at"> true</span>
+  <span class="fu">texlive:</span><span class="at"> false</span>
+  <span class="fu">sysdeps:</span>
+    <span class="kw">-</span> gfortran
+  <span class="fu">cran:</span>
+    <span class="kw">-</span> glmnet
+  <span class="fu">bioc:</span>
+    <span class="kw">-</span> Gviz
+  <span class="fu">remotes:</span>
+    <span class="kw">-</span> <span class="st">&quot;road2stat/liftr&quot;</span>
+  <span class="fu">include:</span><span class="at"> </span><span class="st">&quot;DockerfileSnippet&quot;</span>
+<span class="ot">---</span></code></pre></div>
 <p>All available metadata fields are expained below.</p>
-
-<h2>Required metadata</h2>
-
+<div id="required-metadata" class="section level2">
+<h2><span class="header-section-number">2.1</span> Required metadata</h2>
 <ul>
 <li><p><code>maintainer</code></p>
-
-<p>Maintainer&#39;s name for the Dockerfile.</p></li>
+<p>Maintainer’s name for the Dockerfile.</p></li>
 <li><p><code>email</code></p>
-
-<p>Maintainer&#39;s email address for the Dockerfile.</p></li>
+<p>Maintainer’s email address for the Dockerfile.</p></li>
 </ul>
-
-<h2>Optional metadata</h2>
-
+</div>
+<div id="optional-metadata" class="section level2">
+<h2><span class="header-section-number">2.2</span> Optional metadata</h2>
 <ul>
 <li><p><code>from</code></p>
-
-<p>Base image for building the docker image. Default is
-<code>&quot;rocker/r-base:latest&quot;</code>. For R users, the images offered
-by the <a href="https://github.com/rocker-org">rocker project</a>
-and <a href="https://bioconductor.org/help/docker/">Bioconductor</a>
-can be considered first.</p></li>
+<p>Base image for building the docker image. Default is <code>&quot;rocker/r-base:latest&quot;</code>. For R users, the images offered by the <a href="https://github.com/rocker-org">rocker project</a> and <a href="https://bioconductor.org/help/docker/">Bioconductor</a> can be considered first.</p></li>
 <li><p><code>pandoc</code></p>
-
 <p>Should we install pandoc in the container? Default is <code>true</code>.</p>
-
-<p>If pandoc was already installed in the base image, this should be
-set to <code>false</code> to avoid potential errors. For example, for
-<a href="https://registry.hub.docker.com/u/rocker/rstudio/"><code>rocker/rstudio</code> images</a>
-and <a href="https://www.bioconductor.org/help/docker/"><code>bioconductor/...</code> images</a>,
-this option will be automatically set to <code>false</code> since they already
-have pandoc installed.</p></li>
+<p>If pandoc was already installed in the base image, this should be set to <code>false</code> to avoid potential errors. For example, for <a href="https://registry.hub.docker.com/u/rocker/rstudio/"><code>rocker/rstudio</code> images</a> and <a href="https://www.bioconductor.org/help/docker/"><code>bioconductor/...</code> images</a>, this option will be automatically set to <code>false</code> since they already have pandoc installed.</p></li>
 <li><p><code>texlive</code></p>
-
-<p>Is TeX environment needed when rendering the document? Default is <code>false</code>.
-Should be <code>true</code> particularly when the output format is PDF.</p></li>
+<p>Is TeX environment needed when rendering the document? Default is <code>false</code>. Should be <code>true</code> particularly when the output format is PDF.</p></li>
 <li><p><code>sysdeps</code></p>
-
 <p>Debian/Ubuntu system software packages depended in the document.</p>
-
-<p>Please also include software packages depended by the R packages
-below. For example, here <code>gfortran</code> is required for compiling <code>glmnet</code>.</p></li>
+<p>Please also include software packages depended by the R packages below. For example, here <code>gfortran</code> is required for compiling <code>glmnet</code>.</p></li>
 <li><p><code>cran</code></p>
-
 <p>CRAN packages depended in the document.</p>
-
-<p>If only <code>pkgname</code> is provided, <code>liftr</code> will install the <em>latest</em>
-version of the package on CRAN. To improve reproducibility,
-we recommend to use the package name with a specified version number:
-<code>pkgname/pkgversion</code> (e.g. <code>ggplot2/1.0.0</code>), even if the version
-is the current latest version. Note: <code>pkgversion</code> must be provided
-to install the archived versions of packages.</p></li>
+<p>If only <code>pkgname</code> is provided, <code>liftr</code> will install the <em>latest</em> version of the package on CRAN. To improve reproducibility, we recommend to use the package name with a specified version number: <code>pkgname/pkgversion</code> (e.g. <code>ggplot2/1.0.0</code>), even if the version is the current latest version. Note: <code>pkgversion</code> must be provided to install the archived versions of packages.</p></li>
 <li><p><code>bioc</code></p>
-
 <p>Bioconductor packages depended in the document.</p></li>
 <li><p><code>remotes</code></p>
-
 <p>Remote R packages that are not available from CRAN or Bioconductor.</p>
-
-<p>The <a href="https://github.com/hadley/devtools/blob/master/vignettes/dependencies.Rmd">remote package naming specification</a>
-from devtools is adopted here. Packages can be installed from GitHub,
-Bitbucket, Git/SVN servers, URLs, etc.</p></li>
+<p>The <a href="https://github.com/hadley/devtools/blob/master/vignettes/dependencies.Rmd">remote package naming specification</a> from devtools is adopted here. Packages can be installed from GitHub, Bitbucket, Git/SVN servers, URLs, etc.</p></li>
 <li><p><code>include</code></p>
-
-<p>The path to a text file that contains custom Dockerfile snippet.
-The snippet will be included in the generated Dockerfile.
-This can be used to install additional software packages
-or further configure the system environment.</p>
-
-<p>Note that this file should be in the same directory as the
-input R Markdown file.</p></li>
+<p>The path to a text file that contains custom Dockerfile snippet. The snippet will be included in the generated Dockerfile. This can be used to install additional software packages or further configure the system environment.</p>
+<p>Note that this file should be in the same directory as the input R Markdown file.</p></li>
 </ul>
-
-<h1>Containerize the document</h1>
-
-<p>After adding proper <code>liftr</code> metadata to the document YAML data block,
-we can use <code>lift()</code> to parse the document and generate a Dockerfile.</p>
-
-<p>We will use
-<a href="https://github.com/road2stat/liftr/blob/master/inst/examples/liftr-minimal.Rmd">a minimal example</a>
-included in the liftr package. First, we create a new directory and copy
-the R Markdown document into the directory:</p>
-
-<pre><code class="r">dir_example = &quot;~/liftr-minimal/&quot;
-dir.create(dir_example)
-file.copy(system.file(&quot;examples/liftr-minimal.Rmd&quot;, package = &quot;liftr&quot;), dir_example)
-</code></pre>
-
+</div>
+</div>
+<div id="containerize-the-document" class="section level1">
+<h1><span class="header-section-number">3</span> Containerize the document</h1>
+<p>After adding proper <code>liftr</code> metadata to the document YAML data block, we can use <code>lift()</code> to parse the document and generate a Dockerfile.</p>
+<p>We will use <a href="https://github.com/road2stat/liftr/blob/master/inst/examples/liftr-minimal.Rmd">a minimal example</a> included in the liftr package. First, we create a new directory and copy the R Markdown document into the directory:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dir_example =<span class="st"> &quot;~/liftr-minimal/&quot;</span>
+<span class="kw">dir.create</span>(dir_example)
+<span class="kw">file.copy</span>(<span class="kw">system.file</span>(<span class="st">&quot;examples/liftr-minimal.Rmd&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;liftr&quot;</span>), dir_example)</code></pre></div>
 <p>Then, we use <code>lift()</code> to parse the document and generate the Dockerfile:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;liftr&quot;</span>)
 
-<pre><code class="r">library(&quot;liftr&quot;)
-
-input = paste0(dir_example, &quot;liftr-minimal.Rmd&quot;)
-lift(input)
-</code></pre>
-
-<p>After successfully running <code>lift()</code>, the Dockerfile will be in the
-<code>~/liftr-minimal/</code> directory.</p>
-
-<h1>Render the document</h1>
-
-<p>Now we can use <code>render_docker()</code> to render the document into an HTML file,
-under a Docker container:</p>
-
-<pre><code class="r">render_docker(input)
-</code></pre>
-
-<p>The function <code>render_docker()</code> will parse the Dockerfile, build a new
-Docker image, and run a Docker container to render the input document.
-If successfully rendered, the output <code>liftr-minimal.html</code> will be in
-the <code>~/liftr-minimal/</code> directory. You can also pass additional arguments
-in <code>rmarkdown::render</code> to this function.</p>
-
-<p>In order to share the dockerized R Markdown document, simply share the
-<code>.Rmd</code> file. Other users can use the <code>lift()</code> and <code>render_docker()</code>
-functions to render the document as above.</p>
-
-<h1>Cleaning up</h1>
-
-<p>To clean up the (unused) Docker image after sucessful rendering,
-you can use <code>purge_image()</code>:</p>
-
-<pre><code class="r">purge_image(paste0(dir_example, &quot;liftr-minimal.docker.yml&quot;))
-</code></pre>
-
-<p>The above input YAML file contains the basic information of the
-Docker container, image, and commands to render the document.
-It is generated by setting <code>purge_info = TRUE</code> (default) in <code>render_docker()</code>.</p>
-
-<h1>System requirements</h1>
-
-<p>Docker is an essential system requirement when using liftr to render
-the R Markdown documents. Here is a
-<a href="https://docs.docker.com/engine/installation/">detailed guide</a>
-for installing Docker on major operation systems.</p>
-
-<p>For Linux, we should configure Docker to <a href="https://docs.docker.com/engine/installation/linux/linux-postinstall/">run without sudo</a>.
-To avoid <code>sudo</code> when using the <code>docker</code> command, simply create a group
-named <code>docker</code> and add yourself to it:</p>
-
-<pre><code class="bash">sudo groupadd docker
-sudo usermod -aG docker $USER
-</code></pre>
-
+input =<span class="st"> </span><span class="kw">paste0</span>(dir_example, <span class="st">&quot;liftr-minimal.Rmd&quot;</span>)
+<span class="kw">lift</span>(input)</code></pre></div>
+<p>After successfully running <code>lift()</code>, the Dockerfile will be in the <code>~/liftr-minimal/</code> directory.</p>
+</div>
+<div id="render-the-document" class="section level1">
+<h1><span class="header-section-number">4</span> Render the document</h1>
+<p>Now we can use <code>render_docker()</code> to render the document into an HTML file, under a Docker container:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">render_docker</span>(input)</code></pre></div>
+<p>The function <code>render_docker()</code> will parse the Dockerfile, build a new Docker image, and run a Docker container to render the input document. If successfully rendered, the output <code>liftr-minimal.html</code> will be in the <code>~/liftr-minimal/</code> directory. You can also pass additional arguments in <code>rmarkdown::render</code> to this function.</p>
+<p>In order to share the dockerized R Markdown document, simply share the <code>.Rmd</code> file. Other users can use the <code>lift()</code> and <code>render_docker()</code> functions to render the document as above.</p>
+</div>
+<div id="cleaning-up" class="section level1">
+<h1><span class="header-section-number">5</span> Cleaning up</h1>
+<p>To clean up the (unused) Docker image after sucessful rendering, you can use <code>purge_image()</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">purge_image</span>(<span class="kw">paste0</span>(dir_example, <span class="st">&quot;liftr-minimal.docker.yml&quot;</span>))</code></pre></div>
+<p>The above input YAML file contains the basic information of the Docker container, image, and commands to render the document. It is generated by setting <code>purge_info = TRUE</code> (default) in <code>render_docker()</code>.</p>
+</div>
+<div id="system-requirements" class="section level1">
+<h1><span class="header-section-number">6</span> System requirements</h1>
+<p>Docker is an essential system requirement when using liftr to render the R Markdown documents. Here is a <a href="https://docs.docker.com/engine/installation/">detailed guide</a> for installing Docker on major operation systems.</p>
+<p>For Linux, we should configure Docker to <a href="https://docs.docker.com/engine/installation/linux/linux-postinstall/">run without sudo</a>. To avoid <code>sudo</code> when using the <code>docker</code> command, simply create a group named <code>docker</code> and add yourself to it:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">sudo</span> groupadd docker
+<span class="fu">sudo</span> usermod -aG docker <span class="va">$USER</span></code></pre></div>
 <hr>
+<p>Project website: <a href="https://liftr.me" class="uri">https://liftr.me</a></p>
+</div>
 
-<p>Project website: <a href="https://liftr.me">https://liftr.me</a></p>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
-
 </html>
