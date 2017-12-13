@@ -12,7 +12,7 @@
 
 <meta name="author" content="Nan Xiao &lt;https://nanx.me&gt;" />
 
-<meta name="date" content="2017-09-29" />
+<meta name="date" content="2017-12-13" />
 
 <title>A Quick Introduction to liftr</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">A Quick Introduction to liftr</h1>
 <h4 class="author"><em>Nan Xiao &lt;<a href="https://nanx.me" class="uri">https://nanx.me</a>&gt;</em></h4>
-<h4 class="date"><em>2017-09-29</em></h4>
+<h4 class="date"><em>2017-12-13</em></h4>
 
 
 <div id="TOC">
@@ -82,8 +82,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li><a href="#containerize-the-document"><span class="toc-section-number">3</span> Containerize the document</a></li>
 <li><a href="#render-the-document"><span class="toc-section-number">4</span> Render the document</a></li>
-<li><a href="#cleaning-up"><span class="toc-section-number">5</span> Cleaning up</a></li>
-<li><a href="#system-requirements"><span class="toc-section-number">6</span> System requirements</a></li>
+<li><a href="#housekeeping"><span class="toc-section-number">5</span> Housekeeping</a></li>
+<li><a href="#install-docker"><span class="toc-section-number">6</span> Install Docker</a></li>
 </ul>
 </div>
 
@@ -97,7 +97,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="ot">---</span>
 <span class="fu">title:</span><span class="at"> </span><span class="st">&quot;The Missing Example of liftr&quot;</span>
 <span class="fu">author:</span><span class="at"> </span><span class="st">&quot;Author Name&quot;</span>
-<span class="fu">date:</span><span class="at"> </span><span class="st">&quot;2017-09-29&quot;</span>
+<span class="fu">date:</span><span class="at"> </span><span class="st">&quot;2017-12-13&quot;</span>
 <span class="fu">output:</span><span class="at"> rmarkdown::html_document</span>
 <span class="fu">liftr:</span>
   <span class="fu">maintainer:</span><span class="at"> </span><span class="st">&quot;Maintainer Name&quot;</span>
@@ -156,13 +156,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">3</span> Containerize the document</h1>
 <p>After adding proper <code>liftr</code> metadata to the document YAML data block, we can use <code>lift()</code> to parse the document and generate a Dockerfile.</p>
 <p>We will use <a href="https://github.com/road2stat/liftr/blob/master/inst/examples/liftr-minimal.Rmd">a minimal example</a> included in the liftr package. First, we create a new directory and copy the R Markdown document into the directory:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dir_example =<span class="st"> &quot;~/liftr-minimal/&quot;</span>
-<span class="kw">dir.create</span>(dir_example)
-<span class="kw">file.copy</span>(<span class="kw">system.file</span>(<span class="st">&quot;examples/liftr-minimal.Rmd&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;liftr&quot;</span>), dir_example)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">path =<span class="st"> &quot;~/liftr-minimal/&quot;</span>
+<span class="kw">dir.create</span>(path)
+<span class="kw">file.copy</span>(<span class="kw">system.file</span>(<span class="st">&quot;examples/liftr-minimal.Rmd&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;liftr&quot;</span>), path)</code></pre></div>
 <p>Then, we use <code>lift()</code> to parse the document and generate the Dockerfile:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;liftr&quot;</span>)
 
-input =<span class="st"> </span><span class="kw">paste0</span>(dir_example, <span class="st">&quot;liftr-minimal.Rmd&quot;</span>)
+input =<span class="st"> </span><span class="kw">paste0</span>(path, <span class="st">&quot;liftr-minimal.Rmd&quot;</span>)
 <span class="kw">lift</span>(input)</code></pre></div>
 <p>After successfully running <code>lift()</code>, the Dockerfile will be in the <code>~/liftr-minimal/</code> directory.</p>
 </div>
@@ -173,18 +173,17 @@ input =<span class="st"> </span><span class="kw">paste0</span>(dir_example, <spa
 <p>The function <code>render_docker()</code> will parse the Dockerfile, build a new Docker image, and run a Docker container to render the input document. If successfully rendered, the output <code>liftr-minimal.html</code> will be in the <code>~/liftr-minimal/</code> directory. You can also pass additional arguments in <code>rmarkdown::render</code> to this function.</p>
 <p>In order to share the dockerized R Markdown document, simply share the <code>.Rmd</code> file. Other users can use the <code>lift()</code> and <code>render_docker()</code> functions to render the document as above.</p>
 </div>
-<div id="cleaning-up" class="section level1">
-<h1><span class="header-section-number">5</span> Cleaning up</h1>
-<p>To clean up the (unused) Docker image after sucessful rendering, you can use <code>purge_image()</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">purge_image</span>(<span class="kw">paste0</span>(dir_example, <span class="st">&quot;liftr-minimal.docker.yml&quot;</span>))</code></pre></div>
+<div id="housekeeping" class="section level1">
+<h1><span class="header-section-number">5</span> Housekeeping</h1>
+<p>Normally, the argument <code>prune</code> is set to <code>TRUE</code> in <code>render_docker()</code>. This means any dangling containers or images due to unsuccessful builds will be automatically cleaned.</p>
+<p>To clean up the dangling containers, images, and everything without specifying names, please use <code>prune_container_auto()</code>, <code>prune_image_auto()</code>, and <code>prune_all_auto()</code>.</p>
+<p>If you wish to manually remove the Docker container or image (whose information will be stored in an output YAML file) after sucessful rendering, use <code>prune_container()</code> and <code>prune_image()</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">purge_image</span>(<span class="kw">paste0</span>(path, <span class="st">&quot;liftr-minimal.docker.yml&quot;</span>))</code></pre></div>
 <p>The above input YAML file contains the basic information of the Docker container, image, and commands to render the document. It is generated by setting <code>purge_info = TRUE</code> (default) in <code>render_docker()</code>.</p>
 </div>
-<div id="system-requirements" class="section level1">
-<h1><span class="header-section-number">6</span> System requirements</h1>
-<p>Docker is an essential system requirement when using liftr to render the R Markdown documents. Here is a <a href="https://docs.docker.com/engine/installation/">detailed guide</a> for installing Docker on major operation systems.</p>
-<p>For Linux, we should configure Docker to <a href="https://docs.docker.com/engine/installation/linux/linux-postinstall/">run without sudo</a>. To avoid <code>sudo</code> when using the <code>docker</code> command, simply create a group named <code>docker</code> and add yourself to it:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">sudo</span> groupadd docker
-<span class="fu">sudo</span> usermod -aG docker <span class="va">$USER</span></code></pre></div>
+<div id="install-docker" class="section level1">
+<h1><span class="header-section-number">6</span> Install Docker</h1>
+<p>Docker is an essential system requirement when using liftr to render the R Markdown documents. <code>install_docker()</code> will help you find the proper guide to install and set up Docker in your system. To check if Docker is correctly installed, use <code>check_docker_install()</code>; to check if the Docker daemon is running, use <code>check_docker_running()</code>. In particular, Linux users should configure Docker to <a href="https://docs.docker.com/engine/installation/linux/linux-postinstall/">run without sudo</a>.</p>
 </div>
 
 

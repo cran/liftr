@@ -1,11 +1,12 @@
 Package: liftr
 Type: Package
 Title: Containerize R Markdown Documents
-Version: 0.7
+Version: 0.8
 Authors@R: c(
-    person("Nan", "Xiao", email = "me@nanx.me", role = c("aut", "cre")),
-    person("Miaozhu", "Li", email = "miaozhu.li@duke.edu", role = "ctb"),
-    person("Tengfei", "Yin", email = "tengfei.yin@sevenbridges.com", role = "ctb")
+    person("Nan", "Xiao", email = "me@nanx.me", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0250-5673")),
+    person("Miao-Zhu", "Li", email = "miaozhu.li@duke.edu", role = "ctb"),
+    person("Teng-Fei", "Yin", email = "tengfei.yin@sevenbridges.com", role = "ctb")
     )
 Maintainer: Nan Xiao <me@nanx.me>
 Description: Persistent reproducible reporting by containerization of R Markdown documents.
@@ -20,9 +21,9 @@ Imports: yaml, knitr, rmarkdown, stringr, rstudioapi
 Encoding: UTF-8
 RoxygenNote: 6.0.1.9000
 NeedsCompilation: no
-Packaged: 2017-09-29 19:29:55 UTC; nanx
-Author: Nan Xiao [aut, cre],
-  Miaozhu Li [ctb],
-  Tengfei Yin [ctb]
+Packaged: 2017-12-13 09:15:02 UTC; nanx
+Author: Nan Xiao [aut, cre] (0000-0002-0250-5673),
+  Miao-Zhu Li [ctb],
+  Teng-Fei Yin [ctb]
 Repository: CRAN
-Date/Publication: 2017-09-29 20:09:49 UTC
+Date/Publication: 2017-12-13 09:21:13 UTC
