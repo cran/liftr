@@ -31,7 +31,7 @@ parse_texlive = function(texlive) {
   }
 }
 
-# this solves https://github.com/road2stat/liftr/issues/12
+# this solves https://github.com/nanxstats/liftr/issues/12
 parse_pandoc = function(liftr_from, pandoc) {
   if (is_from_bioc(liftr_from) | is_from_rstudio(liftr_from)) {
     NULL
@@ -67,7 +67,9 @@ parse_cran = function(cran) {
 
 parse_bioc = function(bioc) {
   if (!is.null(bioc)) {
-    liftr_bioc = quote_str(bioc)
+    liftr_bioc_version = gsub('.*\\/(.*)', '\\1', bioc[1])
+    bioc_package = gsub('(.*)\\/.*', '\\1', bioc)
+    liftr_bioc = quote_str(bioc_package)
     tmp = tempfile()
     invisible(knit(
       input = system.file(
@@ -79,6 +81,7 @@ parse_bioc = function(bioc) {
     NULL
   }
 }
+
 
 parse_remotes = function(remotes) {
   if (!is.null(remotes)) {
